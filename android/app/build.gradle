@@ -103,7 +103,7 @@ android {
     buildToolsVersion "23.0.1"
 
     defaultConfig {
-        applicationId "com.invertase.rnfirebasestarter"
+        applicationId "com.mialeo.brollop"
         minSdkVersion 16
         targetSdkVersion 22
         versionCode 1
@@ -148,6 +148,10 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-vector-icons')
+    compile(project(':react-native-firebase')) {
+        transitive = false
+    }
     compile(project(':react-native-firebase')) {
         transitive = false
     }
