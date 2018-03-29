@@ -1,6 +1,7 @@
 import React from 'react';
 import firebase from 'react-native-firebase';
 import { View, Text, Button, TextInput } from 'react-native';
+import ModalDropdown from 'react-native-modal-dropdown';
 import Input from '../../components/Input';
 
 class NewBudgetItem extends React.Component {
@@ -10,9 +11,12 @@ class NewBudgetItem extends React.Component {
     this.state = {
       name: '',
       unitPrice: '',
+      quantityTypeIndex: 0,
+      quantityTypeValue: 'Ange själv',
       quantity: 1,
       amount: '',
       isNew: true,
+      editableQuantity: true,
     }
   }
 
@@ -28,6 +32,17 @@ class NewBudgetItem extends React.Component {
     if (this.props.navigation.state.params !== undefined) {
       const item = this.props.navigation.state.params.item.item;
       const amount = item.unitPrice * item.quantity;
+
+      // TODO Can we do this better?
+      if (item.quantityTypeIndex == 0) {
+        var quantityTypeValue = 'Ange själv';
+      } else if (item.quantityTypeIndex == 1) {
+        var quantityTypeValue = 'Antal gäster';
+      }
+
+      // Set dropdown to reflect quantity type
+      this.dropdown.select(item.quantityTypeIndex);
+
       this.setState({
         name: item.name,
         unitPrice: item.unitPrice,
@@ -49,6 +64,7 @@ class NewBudgetItem extends React.Component {
         db.collection("weddings").doc(uid).collection("budget").add({
           name: this.state.name,
           unitPrice: this.state.unitPrice,
+          quantityTypeIndex: this.state.quantityTypeIndex,
           quantity: this.state.quantity,
           amount: this.state.amount,
         });
@@ -81,7 +97,8 @@ class NewBudgetItem extends React.Component {
           name: this.state.name,
           unitPrice: this.state.unitPrice,
           amount: this.state.amount,
-          quantity: this.state.quantity
+          quantity: this.state.quantity,
+          quantityTypeIndex: this.state.quantityTypeIndex,
         });
 
         goBack();
@@ -104,6 +121,15 @@ class NewBudgetItem extends React.Component {
         quantity: quantity,
         amount: amount
       });
+    }
+
+    onSelectQuantityType = (index, value) => {
+      // If any automatic quantity option is selected, disable editing
+      if (index != 0) {
+        this.setState({editableQuantity: false, quantityTypeIndex: parseInt(index)});
+      } else {
+        this.setState({editableQuantity: true, quantityTypeIndex: parseInt(index)});
+      }
     }
 
     return(
@@ -130,8 +156,16 @@ class NewBudgetItem extends React.Component {
           keyboardType="numeric"
         />
         <Text>Antal</Text>
+        <ModalDropdown
+          ref={(ref) => this.dropdown = ref}
+          options={['Ange själv', 'Antal gäster']}
+          defaultIndex={this.state.quantityTypeIndex}
+          defaultValue={this.state.quantityTypeValue}
+          onSelect={(index, value) => onSelectQuantityType(index, value)}
+        />
         <TextInput
           value={`${this.state.quantity}`}
+          editable={this.state.editableQuantity}
           keyboardType="numeric"
           onChangeText={(quantity) => {
             if(quantity === "") {

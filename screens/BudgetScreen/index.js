@@ -26,14 +26,15 @@ class BudgetScreen extends React.Component {
       var budgetItems = [];
       var totalAmount = 0;
       querySnapshot.forEach(function(doc) {
-        const { name, unitPrice, amount, quantity } = doc.data();
+        const { name, unitPrice, amount, quantity, quantityTypeIndex } = doc.data();
         totalAmount += amount;
         budgetItems.push({
           key: doc.id,
           name,
           unitPrice,
           amount,
-          quantity
+          quantity,
+          quantityTypeIndex
         });
       });
       this.setState({
