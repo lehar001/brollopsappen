@@ -123,10 +123,28 @@ class NewBudgetItem extends React.Component {
       });
     }
 
+    onQuantityTypeUpdate = (index) => {
+      var db = firebase.firestore();
+      var uid = firebase.auth().currentUser.uid;
+
+      // 1 = number of guests
+      if (index == 1) {
+        db.collection("weddings").doc(uid).collection("guests").onSnapshot((querySnapshot) => {
+          var quantity = querySnapshot._docs.length;
+          var amount = quantity * this.state.unitPrice;
+          this.setState({
+            quantity: quantity,
+            amount: amount
+          });
+        });
+      }
+    }
+
     onSelectQuantityType = (index, value) => {
       // If any automatic quantity option is selected, disable editing
       if (index != 0) {
         this.setState({editableQuantity: false, quantityTypeIndex: parseInt(index)});
+        onQuantityTypeUpdate(index);
       } else {
         this.setState({editableQuantity: true, quantityTypeIndex: parseInt(index)});
       }
