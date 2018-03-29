@@ -131,7 +131,7 @@ class GuestList extends React.Component {
 
   renderItem(guest) {
 
-    onDelete = (guest) => {
+    onGuestDelete = (guest) => {
       const uid = firebase.auth().currentUser.uid;
       const db = firebase.firestore().collection("weddings").doc(uid);
 
@@ -172,7 +172,7 @@ class GuestList extends React.Component {
       text: 'Ta bort',
       backgroundColor: 'red',
       underlayColor: 'rgba(0, 0, 1, 0.6)',
-      onPress: () => {onDelete(guest)}
+      onPress: () => {onGuestDelete(guest)}
     }];
 
     // Define styles depending on status
