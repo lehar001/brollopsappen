@@ -33,21 +33,21 @@ class NewBudgetItem extends React.Component {
       const item = this.props.navigation.state.params.item.item;
       const amount = item.unitPrice * item.quantity;
 
-      // TODO Can we do this better?
-      if (item.quantityTypeIndex == 0) {
-        var quantityTypeValue = 'Ange själv';
-      } else if (item.quantityTypeIndex == 1) {
-        var quantityTypeValue = 'Antal gäster';
-      }
-
       // Set dropdown to reflect quantity type
       this.dropdown.select(item.quantityTypeIndex);
+
+      // Makes sure users can't edit quantity if it's not set to index 0
+      var editableQuantity = true;
+      if (item.quantityTypeIndex != 0) {
+        editableQuantity = false;
+      }
 
       this.setState({
         name: item.name,
         unitPrice: item.unitPrice,
         quantity: item.quantity,
         amount: amount,
+        editableQuantity: editableQuantity,
         isNew: false
       });
     }
@@ -158,7 +158,7 @@ class NewBudgetItem extends React.Component {
         <Text>Antal</Text>
         <ModalDropdown
           ref={(ref) => this.dropdown = ref}
-          options={['Ange själv', 'Antal gäster']}
+          options={['Ange själv', 'Antal gäster', 'Antal barn']}
           defaultIndex={this.state.quantityTypeIndex}
           defaultValue={this.state.quantityTypeValue}
           onSelect={(index, value) => onSelectQuantityType(index, value)}
