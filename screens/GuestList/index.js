@@ -41,6 +41,11 @@ class GuestList extends React.Component {
             totalGuests = totalGuests + extra;
         });
         totalGuests = totalGuests + guests.length;
+        db.collection("weddings").doc(uid).set({
+          totalGuests: totalGuests,
+        }, {
+          merge: true
+        });
         if (this.state.selectedIndex == 0) {
           this.setState({
             allGuests: guests,

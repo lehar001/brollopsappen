@@ -129,8 +129,8 @@ class NewBudgetItem extends React.Component {
 
       // 1 = number of guests
       if (index == 1) {
-        db.collection("weddings").doc(uid).collection("guests").onSnapshot((querySnapshot) => {
-          var quantity = querySnapshot._docs.length;
+        db.collection("weddings").doc(uid).onSnapshot((querySnapshot) => {
+          var quantity = querySnapshot.data().totalGuests;
           var amount = quantity * this.state.unitPrice;
           this.setState({
             quantity: quantity,
