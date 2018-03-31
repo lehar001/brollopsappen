@@ -85,6 +85,7 @@ class GuestList extends React.Component {
   componentWillUpdate(nextProps, nextState){
     const db = firebase.firestore();
     const uid = firebase.auth().currentUser.uid;
+    // Get all budget items where quantity type is greater than 0 (not manual)
     db.collection("weddings").doc(uid).collection("budget").where("quantityTypeIndex", ">", 0).get().then((querySnapshot) => {
       querySnapshot.forEach(function(doc) {
         // 1 = all guests

@@ -17,7 +17,7 @@ class SettingsScreen extends React.Component {
     const db = firebase.firestore();
     const uid = firebase.auth().currentUser.uid;
 
-    db.collection("weddings").doc(uid).onSnapshot((snapshot) => {
+    db.collection("weddings").doc(uid).get().then((snapshot) => {
       const wedding = snapshot.data();
       this.setState({
         name1: wedding.name1,
