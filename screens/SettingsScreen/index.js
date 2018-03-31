@@ -28,6 +28,12 @@ class SettingsScreen extends React.Component {
   }
 
   onLogout = () => {
+    // Before signing out, unsubscribe to not cause errors
+    const db = firebase.firestore();
+    const uid = firebase.auth().currentUser.uid;
+    var unsubscribe = db.collection("weddings").onSnapshot(() => {});
+    unsubscribe();
+    // Sign out
     firebase.auth().signOut();
   }
 
