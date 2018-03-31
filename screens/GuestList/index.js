@@ -79,6 +79,29 @@ class GuestList extends React.Component {
     });
   }
 
+  // Each time the component is updated it means the guest list has changed.
+  // Therefore we will update the budget items that rely on the guest list
+  // Next state contains the state after the update, this is what we want
+  componentWillUpdate(nextProps, nextState){
+    const db = firebase.firestore();
+    const uid = firebase.auth().currentUser.uid;
+    db.collection("weddings").doc(uid).collection("budget").where("quantityTypeIndex", ">", 0).get().then((querySnapshot) => {
+      querySnapshot.forEach(function(doc) {
+        // 1 = all guests
+        if (doc.data().quantityTypeIndex == 1) {
+          var quantity = nextState.totalGuests;
+          var amount = doc.data().unitPrice * quantity;
+          db.collection("weddings").doc(uid).collection("budget").doc(doc.id).set({
+            quantity: quantity,
+            amount: amount
+          }, {
+            merge: true
+          });
+        }
+      });
+    });
+  }
+
   componentWillUnmount() {
     const db = firebase.firestore();
     const uid = firebase.auth().currentUser.uid;

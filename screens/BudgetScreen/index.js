@@ -21,7 +21,7 @@ class BudgetScreen extends React.Component {
   componentDidMount(){
     const db = firebase.firestore();
     const uid = firebase.auth().currentUser.uid;
-    
+
     db.collection("weddings").doc(uid).collection("budget").onSnapshot((querySnapshot) => {
       var budgetItems = [];
       var totalAmount = 0;
@@ -42,6 +42,13 @@ class BudgetScreen extends React.Component {
         totalAmount: totalAmount,
       });
     });
+  }
+
+  componentWillUnmount() {
+    const db = firebase.firestore();
+    const uid = firebase.auth().currentUser.uid;
+    var unsubscribe = db.collection("weddings").doc(uid).collection("budget").onSnapshot(() => {});
+    unsubscribe();
   }
 
   renderItem(item) {
