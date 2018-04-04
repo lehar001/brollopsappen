@@ -127,8 +127,8 @@ class NewBudgetItem extends React.Component {
       var db = firebase.firestore();
       var uid = firebase.auth().currentUser.uid;
 
-      // 1 = number of guests
-      if (index == 1) {
+      // 2 = number of invited
+      if (index == 2) {
         db.collection("weddings").doc(uid).get().then((doc) => {
           var quantity = doc.data().totalGuests;
           var amount = quantity * this.state.unitPrice;
@@ -176,7 +176,7 @@ class NewBudgetItem extends React.Component {
         <Text>Antal</Text>
         <ModalDropdown
           ref={(ref) => this.dropdown = ref}
-          options={['Ange själv', 'Antal gäster', 'Antal barn']}
+          options={['Ange själv', 'Antal gäster', 'Antal inbjudna',]}
           defaultIndex={this.state.quantityTypeIndex}
           defaultValue={this.state.quantityTypeValue}
           onSelect={(index, value) => onSelectQuantityType(index, value)}

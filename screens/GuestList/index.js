@@ -17,7 +17,10 @@ class GuestList extends React.Component {
     super();
     this.state = {
       guests: '',
-      totalGuests: '',
+      totalGuests: 0,
+      attendingGuests: 0,
+      notAttendingGuests: 0,
+      notAnsweredGuests: 0,
       selectedIndex: 0,
     }
   }
@@ -26,9 +29,12 @@ class GuestList extends React.Component {
     const uid = firebase.auth().currentUser.uid;
     const db = firebase.firestore();
 
-    db.collection("weddings").doc(uid).collection("guests").onSnapshot((querySnapshot) => {
+    db.collection("weddings").doc(uid).collection("guests").orderBy('name').onSnapshot((querySnapshot) => {
         var guests = [];
         var totalGuests = 0;
+        var attendingGuests = 0;
+        var notAttendingGuests = 0;
+        var notAnsweredGuests = 0;
         querySnapshot.forEach(function(doc) {
           const { name, status, extra, kids } = doc.data();
             guests.push({
@@ -38,11 +44,20 @@ class GuestList extends React.Component {
               extra,
               kids
             });
-            totalGuests = totalGuests + extra;
+            totalGuests = totalGuests + 1 + extra;
+            if (status == "attending") {
+              attendingGuests += 1 + extra;
+            } else if (status == "notAttending") {
+              notAttendingGuests += 1 + extra;
+            } else if (status == "noAnswer") {
+              notAnsweredGuests += 1 + extra;
+            }
         });
-        totalGuests = totalGuests + guests.length;
         db.collection("weddings").doc(uid).set({
           totalGuests: totalGuests,
+          attendingGuests: attendingGuests,
+          notAnsweredGuests: notAnsweredGuests,
+          notAttendingGuests: notAttendingGuests
         }, {
           merge: true
         });
@@ -50,11 +65,13 @@ class GuestList extends React.Component {
           this.setState({
             allGuests: guests,
             filteredGuests: guests,
-            totalGuests: totalGuests
+            totalGuests,
+            notAttendingGuests,
+            notAnsweredGuests,
+            attendingGuests
           });
         } else {
           filterGuests = (status) => {
-
              var filteredGuests = guests.filter(function(guest){
                 return guest.status == status;
              }).map(function(guest){
@@ -63,7 +80,10 @@ class GuestList extends React.Component {
              this.setState({
                filteredGuests: filteredGuests,
                allGuests: guests,
-               totalGuests: totalGuests
+               totalGuests,
+               notAttendingGuests,
+               notAnsweredGuests,
+               attendingGuests
              });
            }
 
@@ -88,8 +108,8 @@ class GuestList extends React.Component {
     // Get all budget items where quantity type is greater than 0 (not manual)
     db.collection("weddings").doc(uid).collection("budget").where("quantityTypeIndex", ">", 0).get().then((querySnapshot) => {
       querySnapshot.forEach(function(doc) {
-        // 1 = all guests
-        if (doc.data().quantityTypeIndex == 1) {
+        // 2 = all invited
+        if (doc.data().quantityTypeIndex == 2) {
           var quantity = nextState.totalGuests;
           var amount = doc.data().unitPrice * quantity;
           db.collection("weddings").doc(uid).collection("budget").doc(doc.id).set({
@@ -242,7 +262,10 @@ class GuestList extends React.Component {
           selectedIndex={this.state.selectedIndex}
           onTabPress={this.handleIndexChange}
         />
-        <Text>Antal gäster: {this.state.totalGuests}</Text>
+        <Text>Antal inbjudna: {this.state.totalGuests}</Text>
+        <Text>Tackat ja: {this.state.attendingGuests}</Text>
+        <Text>Tackat nej: {this.state.notAttendingGuests}</Text>
+        <Text>Ej svarat: {this.state.notAnsweredGuests}</Text>
         <FlatList
           data={this.state.filteredGuests}
           renderItem={this.renderItem.bind(this)}
