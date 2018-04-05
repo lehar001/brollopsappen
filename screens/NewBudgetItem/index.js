@@ -3,6 +3,7 @@ import firebase from 'react-native-firebase';
 import { View, Text, Button, TextInput } from 'react-native';
 import ModalDropdown from 'react-native-modal-dropdown';
 import Input from '../../components/Input';
+import EStyleSheet from 'react-native-extended-stylesheet';
 
 class NewBudgetItem extends React.Component {
 
@@ -191,6 +192,7 @@ class NewBudgetItem extends React.Component {
           onSelect={(index, value) => onSelectQuantityType(index, value)}
         />
         <TextInput
+          style={[styles.inactive, this.state.editableQuantity && styles.active]}
           value={`${this.state.quantity}`}
           editable={this.state.editableQuantity}
           keyboardType="numeric"
@@ -219,3 +221,12 @@ class NewBudgetItem extends React.Component {
 }
 
 export default NewBudgetItem;
+
+const styles = EStyleSheet.create({
+  active: {
+    backgroundColor: "#F5F5F5",
+  },
+  inactive: {
+    backgroundColor: "red",
+  }
+});
