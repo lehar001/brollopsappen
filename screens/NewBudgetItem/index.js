@@ -127,16 +127,25 @@ class NewBudgetItem extends React.Component {
       var db = firebase.firestore();
       var uid = firebase.auth().currentUser.uid;
 
-      // 2 = number of invited
-      if (index == 2) {
+      calculateAmount = (typeOfGuests) => {
         db.collection("weddings").doc(uid).get().then((doc) => {
-          var quantity = doc.data().totalGuests;
+          var data = doc.data();
+          var quantity = doc.data()[typeOfGuests];
+          console.log(quantity);
           var amount = quantity * this.state.unitPrice;
           this.setState({
             quantity: quantity,
             amount: amount
           });
         });
+      }
+
+      // 2 = number of invited
+      if (index == 2) {
+        calculateAmount("totalGuests");
+      } else if (index == 1) {
+        // 1 = number of attending guests
+        calculateAmount("attendingGuests");
       }
     }
 
