@@ -108,9 +108,9 @@ class GuestList extends React.Component {
     // Get all budget items where quantity type is greater than 0 (not manual)
     db.collection("weddings").doc(uid).collection("budget").where("quantityTypeIndex", ">", 0).get().then((querySnapshot) => {
       querySnapshot.forEach(function(doc) {
-        // 2 = all invited
-        if (doc.data().quantityTypeIndex == 2) {
-          var quantity = nextState.totalGuests;
+
+        updateBudgetItem = (typeOfGuests) => {
+          var quantity = nextState[typeOfGuests];
           var amount = doc.data().unitPrice * quantity;
           db.collection("weddings").doc(uid).collection("budget").doc(doc.id).set({
             quantity: quantity,
@@ -118,6 +118,12 @@ class GuestList extends React.Component {
           }, {
             merge: true
           });
+        }
+        // 2 = all invited
+        if (doc.data().quantityTypeIndex == 2) {
+          updateBudgetItem("totalGuests");
+        } else if (doc.data().quantityTypeIndex == 1) {
+          updateBudgetItem("attendingGuests");
         }
       });
     });
