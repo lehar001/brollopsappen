@@ -192,6 +192,7 @@ class NewBudgetItem extends React.Component {
           onSelect={(index, value) => onSelectQuantityType(index, value)}
         />
         <TextInput
+          // conditional styles as seen http://www.terrydiederich.com/changing-style-as-state-changes-in-react-native/
           style={[styles.inactive, this.state.editableQuantity && styles.active]}
           value={`${this.state.quantity}`}
           editable={this.state.editableQuantity}
