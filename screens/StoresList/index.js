@@ -22,11 +22,11 @@ class StoresList extends React.Component{
     db.collection('stores').doc(category).collection('items').onSnapshot((querySnapshot) => {
       var stores = [];
       querySnapshot.forEach(function(doc) {
-        const { name, rating } = doc.data();
+        const store = doc.data();
         stores.push({
+          category: category,
           key: doc.id,
-          name,
-          rating,
+          store
         });
       });
       this.setState({
@@ -46,7 +46,7 @@ class StoresList extends React.Component{
     return(
       <TouchableHighlight onPress={() => this.props.navigation.navigate('StoreDetail', {store: store.item})}>
         <View>
-          <Text>{store.item.name}</Text>
+          <Text>{store.item.store.name}</Text>
         </View>
       </TouchableHighlight>
     )
