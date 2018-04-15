@@ -4,7 +4,7 @@ import UIStepper from 'react-native-ui-stepper';
 import SegmentedControlTab from 'react-native-segmented-control-tab';
 import Input from '../../components/Input';
 
-import { Text, TextInput, Button, View, StyleSheet } from 'react-native';
+import { Text, TextInput, Button, View, StyleSheet, Alert } from 'react-native';
 
 class NewGuest extends React.Component {
 
@@ -68,6 +68,8 @@ class NewGuest extends React.Component {
         });
 
         goBack();
+      } else {
+        Alert.alert('Oops', 'Du måste fylla i ett namn')
       }
     }
 
@@ -87,6 +89,8 @@ class NewGuest extends React.Component {
         });
 
         goBack();
+      } else {
+        Alert.alert('Oops', 'Du måste fylla i ett namn')
       }
     }
 

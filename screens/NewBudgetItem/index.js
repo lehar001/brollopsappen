@@ -1,6 +1,6 @@
 import React from 'react';
 import firebase from 'react-native-firebase';
-import { View, Text, Button, TextInput } from 'react-native';
+import { View, Text, Button, TextInput, Alert } from 'react-native';
 import ModalDropdown from 'react-native-modal-dropdown';
 import Input from '../../components/Input';
 import EStyleSheet from 'react-native-extended-stylesheet';
@@ -72,7 +72,7 @@ class NewBudgetItem extends React.Component {
 
         goBack();
       } else {
-        console.log("Something is not filled out");
+        Alert.alert('Oops', 'Du måste fylla i namn och pris');
       }
     }
 
@@ -104,7 +104,7 @@ class NewBudgetItem extends React.Component {
 
         goBack();
       } else {
-        console.log("Something is not filled out")
+        Alert.alert('Oops', 'Du måste fylla i namn och pris');
       }
     }
 
