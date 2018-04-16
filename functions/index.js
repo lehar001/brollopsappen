@@ -18,26 +18,42 @@ exports.calculateRating = functions.firestore
     // If the document does not exist, it has been deleted.
     const document = change.after.exists ? change.after.data() : null;
 
+    const updatedReview = change.after.exists && change.before.exists ? true : false;
+
     // Get an object with the previous document value (for update or delete)
     const oldDocument = change.before.data();
 
     const storeRef = admin.firestore().collection('stores').doc(context.params.category).collection('items').doc(context.params.storeId);
 
-    return storeRef.get().then(function(doc) {
-       var currentRating = doc.data().rating;
-       var currentReviews = doc.data().reviews;
-       console.log('Current rating is ' + currentRating);
-       // How to handle deletes?
-       var newReviews = currentReviews + 1;
-       var newRating = ((currentReviews * currentRating) + document.rating) / newReviews;
+    // If rating hasn't changed, don't do anything
+      return storeRef.get().then(function(doc) {
+         var currentRating = doc.data().rating;
+         var currentReviews = doc.data().reviews;
+         console.log('Current rating is ' + currentRating);
+         // How to handle updates?
+         if (document !== null && updatedReview === false) {
+           var newReviews = currentReviews + 1;
+           var newRating = ((currentReviews * currentRating) + document.rating) / newReviews;
+         } else if (document === null) {
+           newReviews = currentReviews - 1;
+           newRating = ((currentReviews * currentRating) - oldDocument.rating) / newReviews;
+           if (newReviews === 0) {
+             newRating = 0;
+           }
+         } else if (document !== null && updatedReview === true) {
+           newReviews = currentReviews;
+           newRating = ((currentReviews * currentRating) - oldDocument.rating + document.rating) / newReviews;
+         }
 
-       console.log('New rating is ' + newRating + ' with a total of ' + newReviews + ' reviews');
+         console.log('New rating is ' + newRating + ' with a total of ' + newReviews + ' reviews');
 
-       return storeRef.update({
-         rating: newRating,
-         reviews: newReviews
-       });
-    }).catch(function(error) {
-      console.log(error);
-    });
+         return storeRef.update({
+           rating: newRating,
+           reviews: newReviews
+         });
+      }).catch(function(error) {
+        console.log(error);
+      });
+
+
   });
