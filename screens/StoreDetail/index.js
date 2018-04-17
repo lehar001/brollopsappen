@@ -1,6 +1,7 @@
 import React from 'react';
-import { View, Text, FlatList } from 'react-native';
+import { View, Text, FlatList, Button, Modal, TouchableHighlight } from 'react-native';
 import firebase from 'react-native-firebase';
+import ReviewModal from './ReviewModal';
 
 class StoreDetail extends React.Component {
 
@@ -12,6 +13,7 @@ class StoreDetail extends React.Component {
     super();
     this.state = {
       reviews: '',
+      modalVisible: false,
     }
   }
 
@@ -52,10 +54,19 @@ class StoreDetail extends React.Component {
     );
   }
 
+  setModalVisible = (visible) => {
+    this.setState({modalVisible: visible});
+  }
+
   render() {
     var store = this.props.navigation.state.params.store.store;
     return(
       <View>
+        <ReviewModal
+          store={store}
+          setModalVisible={() => {this.setModalVisible(!this.state.modalVisible);}}
+          visible={this.state.modalVisible}
+        />
         <View>
           <Text>This store has a rating of {store.rating}</Text>
         </View>
@@ -66,6 +77,9 @@ class StoreDetail extends React.Component {
           keyExtractor={(item, index) => index.toString()}
           ListEmptyComponent={this._renderEmptyReviewList()}
         />
+        <Button
+          title="Skriv en recension"
+          onPress={() => {this.setModalVisible(!this.state.modalVisible);}}/>
       </View>
     )
   }

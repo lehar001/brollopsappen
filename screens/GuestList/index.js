@@ -5,7 +5,7 @@ import SegmentedControlTab from 'react-native-segmented-control-tab';
 import Icon from 'react-native-vector-icons/Ionicons';
 import EStyleSheet from 'react-native-extended-stylesheet';
 
-import { View, Text, FlatList, Button, TouchableHighlight } from 'react-native';
+import { View, Text, FlatList, Button, TouchableHighlight, ActivityIndicator } from 'react-native';
 
 class GuestList extends React.Component {
 
@@ -68,7 +68,7 @@ class GuestList extends React.Component {
             totalGuests,
             notAttendingGuests,
             notAnsweredGuests,
-            attendingGuests
+            attendingGuests,
           });
         } else {
           filterGuests = (status) => {
@@ -83,7 +83,7 @@ class GuestList extends React.Component {
                totalGuests,
                notAttendingGuests,
                notAnsweredGuests,
-               attendingGuests
+               attendingGuests,
              });
            }
 

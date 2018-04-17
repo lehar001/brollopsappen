@@ -17,7 +17,6 @@ import BudgetScreen from '../screens/BudgetScreen';
 import NewBudgetItem from '../screens/NewBudgetItem';
 import SettingsScreen from '../screens/SettingsScreen';
 
-
 // Initial login stack navigator
 export const LoginStack = StackNavigator({
   Login: {
