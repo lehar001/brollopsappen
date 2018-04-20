@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, FlatList, Button, Modal, TouchableHighlight } from 'react-native';
 import firebase from 'react-native-firebase';
 import ReviewModal from './ReviewModal';
+import StarRating from 'react-native-star-rating';
 
 class StoreDetail extends React.Component {
 
@@ -40,7 +41,17 @@ class StoreDetail extends React.Component {
     console.log(review);
     return(
       <View>
-        <Text>Rating: {review.item.rating}</Text>
+        <StarRating
+          disabled={true}
+          emptyStar={'ios-star-outline'}
+          fullStar={'ios-star'}
+          halfStar={'ios-star-half'}
+          iconSet={'Ionicons'}
+          maxStars={5}
+          rating={review.item.rating}
+          selectedStar={null}
+          fullStarColor={'red'}
+        />
         <Text>{review.item.review}</Text>
       </View>
     );
@@ -59,7 +70,7 @@ class StoreDetail extends React.Component {
   }
 
   render() {
-    var store = this.props.navigation.state.params.store.store;
+    var store = this.props.navigation.state.params.store;
     return(
       <View>
         <ReviewModal
@@ -68,7 +79,18 @@ class StoreDetail extends React.Component {
           visible={this.state.modalVisible}
         />
         <View>
-          <Text>This store has a rating of {store.rating}</Text>
+          <StarRating
+            disabled={true}
+            emptyStar={'ios-star-outline'}
+            fullStar={'ios-star'}
+            halfStar={'ios-star-half'}
+            iconSet={'Ionicons'}
+            maxStars={5}
+            rating={store.store.rating}
+            selectedStar={null}
+            fullStarColor={'red'}
+          />
+          <Text>This store has a rating of {store.store.rating}</Text>
         </View>
         <Text>Recensioner</Text>
         <FlatList

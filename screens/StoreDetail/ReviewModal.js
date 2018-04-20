@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Text, TextInput, Modal, View } from 'react-native';
+import { Button, Text, TextInput, Modal, View, Alert } from 'react-native';
 import firebase from 'react-native-firebase';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import StarRating from 'react-native-star-rating';
@@ -11,17 +11,32 @@ class ReviewModal extends React.Component {
     super();
     this.state={
       rating: 0,
+      review: '',
     };
   }
 
   onStarRatingPress(rating) {
     this.setState({
-      starCount: rating
+      rating: rating
     });
   }
 
+  onSaveReview = () => {
+    if (this.state.rating == 0 || this.state.review == '') {
+      Alert.alert('Oops', 'Du måste välja ett betyg och skriva en recension');
+    } else {
+      const db = firebase.firestore().collection("stores").doc(this.props.store.category).collection("items").doc(this.props.store.key).collection("reviews");
+      db.add({
+        rating: this.state.rating,
+        review: this.state.review,
+        created: new Date(),
+      });
+      this.props.setModalVisible();
+    }
+  }
+
   render() {
-    var store = this.props.store
+    var store = this.props.store;
     return(
 
       <Modal
@@ -39,13 +54,14 @@ class ReviewModal extends React.Component {
               halfStar={'ios-star-half'}
               iconSet={'Ionicons'}
               maxStars={5}
-              rating={this.state.starCount}
+              rating={this.state.rating}
               selectedStar={(rating) => this.onStarRatingPress(rating)}
               fullStarColor={'red'}
             />
             <TextInput
               style={styles.multilineInput}
               multiline={true}
+              onChangeText={(text) => this.setState({review: text})}
             />
             <Button
               title="Avbryt"
@@ -54,7 +70,7 @@ class ReviewModal extends React.Component {
             />
             <Button
               title="Spara"
-              onPress={this.props.setModalVisible}
+              onPress={() => this.onSaveReview()}
             />
           </View>
         </View>
