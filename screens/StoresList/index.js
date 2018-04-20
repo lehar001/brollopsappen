@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, FlatList, TouchableHighlight, Text, Image } from 'react-native';
 import firebase from 'react-native-firebase';
+import StarRating from 'react-native-star-rating';
 
 class StoresList extends React.Component{
 
@@ -47,6 +48,18 @@ class StoresList extends React.Component{
       <TouchableHighlight onPress={() => this.props.navigation.navigate('StoreDetail', {store: store.item})}>
         <View>
           <Text>{store.item.store.name}</Text>
+          <StarRating
+            disabled={true}
+            emptyStar={'ios-star-outline'}
+            fullStar={'ios-star'}
+            halfStar={'ios-star-half'}
+            iconSet={'Ionicons'}
+            maxStars={5}
+            rating={store.item.store.rating}
+            selectedStar={null}
+            fullStarColor={'red'}
+          />
+          <Text>{store.item.store.reviews} omdömen</Text>
         </View>
       </TouchableHighlight>
     )

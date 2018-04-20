@@ -60,7 +60,7 @@ class StoreDetail extends React.Component {
   _renderEmptyReviewList() {
     return(
       <View>
-        <Text>Oj, inga recensioner än</Text>
+        <Text>Oj, inga omdömen än</Text>
       </View>
     );
   }
@@ -92,7 +92,7 @@ class StoreDetail extends React.Component {
           />
           <Text>This store has a rating of {store.store.rating}</Text>
         </View>
-        <Text>Recensioner</Text>
+        <Text>Omdömen</Text>
         <FlatList
           data={this.state.reviews}
           renderItem={this.renderReview.bind(this)}
@@ -100,7 +100,7 @@ class StoreDetail extends React.Component {
           ListEmptyComponent={this._renderEmptyReviewList()}
         />
         <Button
-          title="Skriv en recension"
+          title="Skriv ett omdöme"
           onPress={() => {this.setModalVisible(!this.state.modalVisible);}}/>
       </View>
     )
