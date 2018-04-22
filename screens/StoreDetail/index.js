@@ -25,10 +25,12 @@ class StoreDetail extends React.Component {
      db.onSnapshot((querySnapshot) => {
        var reviews = [];
        querySnapshot.forEach(function(doc) {
-         const { review, rating} = doc.data();
+         const { review, rating, writer, created} = doc.data();
          reviews.push({
            review,
-           rating
+           rating,
+           writer,
+           created
          });
        });
        this.setState({
@@ -53,6 +55,7 @@ class StoreDetail extends React.Component {
           fullStarColor={'red'}
         />
         <Text>{review.item.review}</Text>
+        <Text>Av: {review.item.writer}</Text>
       </View>
     );
   }

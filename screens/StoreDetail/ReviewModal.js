@@ -12,6 +12,7 @@ class ReviewModal extends React.Component {
     this.state={
       rating: 0,
       review: '',
+      writer: ''
     };
   }
 
@@ -25,13 +26,24 @@ class ReviewModal extends React.Component {
     if (this.state.rating == 0 || this.state.review == '') {
       Alert.alert('Oops', 'Du måste välja ett betyg och skriva en recension');
     } else {
-      const db = firebase.firestore().collection("stores").doc(this.props.store.category).collection("items").doc(this.props.store.key).collection("reviews");
-      db.add({
-        rating: this.state.rating,
-        review: this.state.review,
-        created: new Date(),
+      const db = firebase.firestore();
+      const uid = firebase.auth().currentUser.uid;
+
+      db.collection("weddings").doc(uid).get().then(function(doc) {
+         var writer = doc.data().name1 + ' & ' + doc.data().name2;
+         saveReview(writer);
       });
-      this.props.setModalVisible();
+
+     saveReview = (writer) => {
+        db.collection("stores").doc(this.props.store.category).collection("items").doc(this.props.store.key).collection("reviews").add({
+          rating: this.state.rating,
+          review: this.state.review,
+          writer: writer,
+          created: new Date(),
+        });
+        this.props.setModalVisible();
+      }
+
     }
   }
 
