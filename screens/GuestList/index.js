@@ -238,9 +238,9 @@ class GuestList extends React.Component {
     }
 
     return (
-      <Swipeout autoClose={true} right={swipeBtns}>
-        <TouchableHighlight onPress={ () => { this.props.navigation.navigate('NewGuest', {guest: guest})}}>
-          <View style={[styles.itemContainer, style]}>
+      <Swipeout autoClose={true} right={swipeBtns} backgroundColor={"transparent"}>
+        <TouchableHighlight style={[styles.itemContainer, style]} onPress={ () => { this.props.navigation.navigate('NewGuest', {guest: guest})}}>
+          <View>
             <View>
               <Text style={styles.itemTitle}>{guest.item.name}</Text>
             </View>
@@ -273,6 +273,7 @@ class GuestList extends React.Component {
         <Text>Tackat nej: {this.state.notAttendingGuests}</Text>
         <Text>Ej svarat: {this.state.notAnsweredGuests}</Text>
         <FlatList
+          style={styles.flatList}
           data={this.state.filteredGuests}
           renderItem={this.renderItem.bind(this)}
           keyExtractor={(item, index) => index.toString()}
@@ -286,17 +287,24 @@ class GuestList extends React.Component {
 export default GuestList;
 
 const styles = EStyleSheet.create({
+  flatList: {
+  
+  },
   itemContainer: {
-    backgroundColor: "#F5F5F5",
+    backgroundColor: "#FFFFFF",
     paddingLeft: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: "#E3E3E3",
+    borderBottomWidth: 0,
     flex: 1,
     flexDirection: "row",
     height: 55,
     alignItems: 'center',
     borderLeftWidth: 5,
-    borderLeftColor: 'rgba(255,255,255,0)'
+    borderLeftColor: 'rgba(255,255,255,0)',
+    marginLeft: 5,
+    marginRight: 5,
+    marginBottom: 2.5,
+    marginTop: 2.5,
+    borderRadius: 5
   },
   itemTitle: {
     fontSize: 18,
