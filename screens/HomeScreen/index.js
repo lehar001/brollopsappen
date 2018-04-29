@@ -4,7 +4,7 @@ import { IntroStack } from '../../config/router.js'
 import Icon from 'react-native-vector-icons/Ionicons';
 import EStyleSheet from 'react-native-extended-stylesheet';
 
-import { Text, View, Button } from 'react-native';
+import { Text, View, Button, FlatList } from 'react-native';
 
 class HomeScreen extends React.Component{
 
@@ -41,7 +41,39 @@ class HomeScreen extends React.Component{
           daysLeft: daysLeft
         });
       }
+      // Now get todo items and use wedding date to calculate todo dates
+      db.collection('todos').onSnapshot((querySnapshot) => {
+        var todos = [];
+        querySnapshot.forEach(function(doc) {
+          const todo = doc.data();
+          weddingDay.setDate(weddingDay.getDate() - todo.daysBeforeWedding);
+          var todoDate = weddingDay.toLocaleString();
+          todos.push({
+            key: doc.id,
+            todoDate,
+            todo
+          });
+        });
+        this.setState({
+          todos: todos,
+        });
+      });
     });
+  }
+
+  componentWillUnmount(){
+    const db = firebase.firestore();
+    var unsubscribe = db.collection("todos").onSnapshot(() => {});
+    unsubscribe();
+  }
+
+  renderTodo(todo) {
+    return(
+        <View>
+          <Text>{todo.item.todo.title}</Text>
+          <Text>Deadline: {todo.item.todoDate}</Text>
+        </View>
+    )
   }
 
   render(){
@@ -53,6 +85,11 @@ class HomeScreen extends React.Component{
       <View>
         <Text>Välkommen till {this.state.wedding.name1} & {this.state.wedding.name2Genitive} bröllop!</Text>
         <Text>{this.state.daysLeft} dagar kvar</Text>
+        <FlatList
+          data={this.state.todos}
+          renderItem={this.renderTodo.bind(this)}
+          keyExtractor={(item, index) => index.toString()}
+        />
       </View>
     );
 
